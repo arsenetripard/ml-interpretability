@@ -17,7 +17,7 @@ df = pd.read_csv(config["DATA_FILEPATH"])
 df.set_index("ID", inplace=True)
 
 # Splitting into X and y
-target = ["Pred_default (y_hat)"]
+target = ["Default (y)"]
 features = ["Job tenure", "Age", "Car price", "Funding amount", "Down payment",
             "Loan duration", "Monthly payment", "Credit event", "Married", "Homeowner"]
 X = df[features].to_numpy()
