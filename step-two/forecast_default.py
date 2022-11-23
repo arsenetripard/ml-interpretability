@@ -27,7 +27,7 @@ y = df[target].to_numpy().ravel()
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # HalvingGridSearchCV tp get best RandomForestClassifier as possible
-param_grid = {'max_depth': [3, 5, 10], 'min_samples_split': [2, 5, 10]}
+param_grid = {'max_depth': [3, 5, 10, 12, 15], 'min_samples_split': [2, 4, 6, 8, 10]}
 base_estimator = RandomForestClassifier(random_state=0)
 search = HalvingGridSearchCV(base_estimator, param_grid, cv=5, factor=2, 
                          resource='n_estimators', max_resources=30).fit(X, y)
