@@ -1,13 +1,19 @@
 import pandas as pd
 import numpy as np
+import yaml
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.experimental import enable_halving_search_cv
 from sklearn.model_selection import train_test_split, HalvingGridSearchCV
 from sklearn.metrics import f1_score
+from joblib import dump
 
+
+# Reading DATA_FILEPATH from config.yml
+with open(r'config.yml') as file:
+    config = yaml.load(file, Loader=yaml.FullLoader)
 
 # Loading dataset
-df = pd.read_csv("/Users/arsenetripard/Downloads/dataproject2022.csv")
+df = pd.read_csv(config["DATA_FILEPATH"])
 df.set_index("ID", inplace=True)
 
 # Splitting into X and y
@@ -31,3 +37,6 @@ print("="*80)
 print(f"Best RandomForestClassifier uses these parameters {search.best_params_}\n")
 print(f"mean accuracy score : {best_estimator.score(X_test, y_test):.2f}")
 print(f"f1 score : {f1_score(y_test, best_estimator.predict(X_test)):.2f}")
+
+# Saving the model
+dump(best_estimator, 'best_estimator.joblib')

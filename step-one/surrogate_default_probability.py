@@ -1,10 +1,15 @@
 import numpy as np
 import pandas as pd
+import yaml
 from sklearn.linear_model import LogisticRegression
 
 
+# Reading DATA_FILEPATH from config.yml
+with open(r'config.yml') as file:
+    config = yaml.load(file, Loader=yaml.FullLoader)
+
 # Loading dataset
-df = pd.read_csv("/Users/arsenetripard/Downloads/dataproject2022.csv")
+df = pd.read_csv(config["DATA_FILEPATH"])
 df.set_index("ID", inplace=True)
 
 # Splitting into X and y
