@@ -50,6 +50,8 @@ print(f"f1 score : {f1_score(y_test, best_estimator.predict(X_test)):.2f}")
 dump(best_estimator, 'best_estimator.joblib')
 
 # Confusion Matrix 
+print("="*80)
+print(f"Confusion Matrix")
 y_pred = best_estimator.predict(X_test)
 cm = confusion_matrix(y_test, y_pred)
 matrix = ConfusionMatrixDisplay(confusion_matrix=cm) 
