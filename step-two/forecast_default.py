@@ -1,10 +1,12 @@
 import pandas as pd
 import numpy as np
-import yaml
+import yaml 
+import random
 from sklearn.ensemble import RandomForestClassifier
+from imblearn.over_sampling import SMOTE 
 from sklearn.experimental import enable_halving_search_cv
 from sklearn.model_selection import train_test_split, HalvingGridSearchCV
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, confusion_matrix, ConfusionMatrixDisplay, plot_roc_curve
 from joblib import dump
 
 
@@ -16,6 +18,9 @@ with open(r'config.yml') as file:
 df = pd.read_csv(config["DATA_FILEPATH"])
 df.set_index("ID", inplace=True)
 
+# Initialize Oversampler
+sm = SMOTE(random_state=42)
+
 # Splitting into X and y
 target = ["Pred_default (y_hat)"]
 features = ["Job tenure", "Age", "Car price", "Funding amount", "Down payment",
@@ -25,6 +30,9 @@ y = df[target].to_numpy().ravel()
 
 # train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Oversampling 
+X_train, y_train = sm.fit_resample(X_train, y_train)
 
 # HalvingGridSearchCV tp get best RandomForestClassifier as possible
 param_grid = {'max_depth': [3, 5, 10], 'min_samples_split': [2, 5, 10]}
@@ -40,3 +48,14 @@ print(f"f1 score : {f1_score(y_test, best_estimator.predict(X_test)):.2f}")
 
 # Saving the model
 dump(best_estimator, 'best_estimator.joblib')
+
+# Confusion Matrix 
+y_pred = best_estimator.predict(X_test)
+cm = confusion_matrix(y_test, y_pred)
+matrix = ConfusionMatrixDisplay(confusion_matrix=cm) 
+matrix.plot()
+
+# ROC Curve
+print("="*80)
+print(f"ROC Curve with AUC score of {roc_auc_score(y_test , clf.predict_proba(X_test)[:, 1])}")
+print(plot_roc_curve(best_estimator, X_test, y_test)) 
