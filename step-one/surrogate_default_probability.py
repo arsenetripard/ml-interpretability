@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import yaml
 from sklearn.linear_model import LogisticRegression
+from joblib import dump
 
 
 # Reading DATA_FILEPATH from config.yml
@@ -41,3 +42,9 @@ interpretability["features_contributions"] = np.round(features_contributions, 2)
 
 print("Features contributions:\n")
 print(interpretability)
+
+# Saving the surrogate model for Step 4
+print("="*80)
+print("Saving the surrogate model...")
+dump(clf, "surrogate_foreign_model.joblib")
+print("Saved!")

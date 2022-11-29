@@ -22,7 +22,7 @@ df.set_index("ID", inplace=True)
 sm = SMOTE(random_state=42)
 
 # Splitting into X and y
-target = ["Pred_default (y_hat)"]
+target = ["Default (y)"]
 features = ["Job tenure", "Age", "Car price", "Funding amount", "Down payment",
             "Loan duration", "Monthly payment", "Credit event", "Married", "Homeowner"]
 X = df[features].to_numpy()
@@ -35,7 +35,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 X_train, y_train = sm.fit_resample(X_train, y_train)
 
 # HalvingGridSearchCV tp get best RandomForestClassifier as possible
-param_grid = {'max_depth': [3, 5, 10], 'min_samples_split': [2, 5, 10]}
+param_grid = {'max_depth': [3, 5, 10, 12, 15], 'min_samples_split': [2, 4, 6, 8, 10]}
 base_estimator = RandomForestClassifier(random_state=0)
 search = HalvingGridSearchCV(base_estimator, param_grid, cv=5, factor=2, 
                          resource='n_estimators', max_resources=30).fit(X, y)
@@ -61,3 +61,4 @@ matrix.plot()
 print("="*80)
 print(f"ROC Curve with AUC score of {roc_auc_score(y_test , clf.predict_proba(X_test)[:, 1])}")
 print(plot_roc_curve(best_estimator, X_test, y_test)) 
+
